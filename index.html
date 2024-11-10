@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Prediction</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .container { max-width: 500px; margin: auto; padding: 20px; }
+        input, button { width: 100%; margin: 10px 0; padding: 10px; }
+        img { max-width: 100%; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to a Healthier You, Starting with Your Heart</h1>
+        <img src="path/to/your/image.jpg" alt="Heart Image">
+        <button onclick="showForm()">Predict Your Heart Health Risk</button>
+        <div id="form-container" style="display:none;">
+            <form id="predictionForm">
+                <label>Name:</label><input type="text" name="name" required>
+                <label>Age:</label><input type="number" name="age" required>
+                <label>Gender:</label><input type="text" name="gender" required>
+                <label>Email:</label><input type="email" name="email" required>
+                <label>Family History of Heart Disease:</label><input type="text" name="family_history" required>
+                <label>Upload ECG Image:</label><input type="file" name="ecg_image" accept="image/*" required>
+                <button type="button" onclick="submitForm()">Submit</button>
+            </form>
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        function showForm() {
+            document.getElementById('form-container').style.display = 'block';
+        }
+
+        function submitForm() {
+            const form = document.getElementById('predictionForm');
+            const formData = new FormData(form);
+
+            fetch('https://your-heroku-app.herokuapp.com/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerHTML = `
+                    <h3>Prediction Result</h3>
+                    <p>Risk Percentage: ${data.risk_percentage}%</p>
+                    <p>${data.message}</p>
+                `;
+            })
+            .catch(error => {
+                document.getElementById('result').innerHTML = `<p>Error: ${error.message}</p>`;
+            });
+        }
+    </script>
+</body>
+</html>
